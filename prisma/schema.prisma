@@ -1,0 +1,93 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+type Features {
+  name  String
+  value String
+}
+
+type Images {
+  url   String
+  color String
+}
+
+model Admin {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  username     String
+  passwordHash String
+  refreshToken String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now()) @updatedAt
+}
+
+model User {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  username     String
+  passwordHash String
+  refreshToken String?
+  createdAt    DateTime @default(now()) @db.Date
+  updatedAt    DateTime @default(now()) @updatedAt @db.Date
+}
+
+model Products {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  price       String
+  sizes       String[]   @default([])
+  images      Images[]
+  features    Features[]
+  isFavourite Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @default(now()) @updatedAt
+  Category    Category?  @relation(fields: [categoryId], references: [id])
+  categoryId  String?    @db.ObjectId
+}
+
+model Category {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  imageUrl    String?
+  iconUrl     String?
+  parentId    String?    @db.ObjectId
+  parent      Category?  @relation(name: "ParentCategory", fields: [parentId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  children    Category[] @relation(name: "ParentCategory")
+  products    Products[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @default(now()) @updatedAt
+}
+
+model Brand {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  imageUrl  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Banner {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  subtitle    String?
+  url         String?
+  description String?
+  imageUrl    String?
+  createdAt   DateTime @default(now()) @db.Timestamp
+  updatedAt   DateTime @default(now()) @updatedAt @db.Timestamp
+}
+
+// model Name {
+//   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+//   createdAt DateTime @default(now()) @db.Timestamp
+//   updatedAt DateTime @default(now()) @updatedAt @db.Timestamp
+// }
