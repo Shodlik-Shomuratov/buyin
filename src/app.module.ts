@@ -6,7 +6,6 @@ import { CategoryModule } from './module/category/category.module';
 import { BannerModule } from './module/banner/banner.module';
 import { BrandModule } from './module/brand/brand.module';
 import { JwtModule } from '@nestjs/jwt';
-import { PrismaModule } from 'nestjs-prisma';
 
 @Module({
 	imports: [

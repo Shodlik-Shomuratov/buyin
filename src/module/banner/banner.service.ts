@@ -1,26 +1,111 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateBannerDto } from './dto/create-banner.dto';
 import { UpdateBannerDto } from './dto/update-banner.dto';
+import { PrismaService } from 'src/prisma.service';
+import { CustomHttpError } from 'src/common/http/error/custom.error';
 
 @Injectable()
 export class BannerService {
-  create(createBannerDto: CreateBannerDto) {
-    return 'This action adds a new banner';
-  }
+	constructor(private readonly prismaService: PrismaService) {}
 
-  findAll() {
-    return `This action returns all banner`;
-  }
+	async create(dto: CreateBannerDto) {
+		try {
+			return await this.prismaService.banner.create({
+				data: {
+					...dto,
+				},
+			});
+		} catch (error) {
+			throw error;
+		}
+	}
 
-  findOne(id: number) {
-    return `This action returns a #${id} banner`;
-  }
+	async findAll() {
+		try {
+			return await this.prismaService.banner.findMany();
+		} catch (error) {
+			throw error;
+		}
+	}
 
-  update(id: number, updateBannerDto: UpdateBannerDto) {
-    return `This action updates a #${id} banner`;
-  }
+	async findOne(id: string) {
+		try {
+			const banner = await this.prismaService.banner.findFirst({
+				where: {
+					id,
+				},
+			});
 
-  remove(id: number) {
-    return `This action removes a #${id} banner`;
-  }
+			if (!banner) {
+				throw new CustomHttpError({
+					message: 'NOT_FOUND',
+					statusCode: HttpStatus.NOT_FOUND,
+				});
+			}
+
+			return banner;
+		} catch (error) {
+			// if (error.code === 'P2023') {
+			// 	console.log(error);
+			// 	throw new CustomHttpError({
+			// 		message: 'INVALID_ID',
+			// 		statusCode: HttpStatus.BAD_REQUEST,
+			// 	});
+			// }
+			throw error;
+		}
+	}
+
+	async update(id: string, dto: UpdateBannerDto) {
+		try {
+			const banner = await this.prismaService.banner.findFirst({
+				where: {
+					id,
+				},
+			});
+
+			if (!banner) {
+				throw new CustomHttpError({
+					message: 'NOT_FOUND',
+					statusCode: HttpStatus.NOT_FOUND,
+				});
+			}
+
+			return await this.prismaService.banner.update({
+				where: {
+					id,
+				},
+				data: {
+					...dto,
+				},
+			});
+		} catch (error) {
+			throw error;
+		}
+	}
+
+	async remove(id: string) {
+		try {
+			const banner = await this.prismaService.banner.findFirst({
+				where: {
+					id,
+				},
+			});
+
+			if (!banner) {
+				throw new CustomHttpError({
+					message: 'NOT_FOUND',
+					statusCode: HttpStatus.NOT_FOUND,
+				});
+			}
+
+			return await this.prismaService.banner.delete({
+				where: {
+					id,
+				},
+			});
+		} catch (error) {
+			throw error;
+		}
+	}
 }

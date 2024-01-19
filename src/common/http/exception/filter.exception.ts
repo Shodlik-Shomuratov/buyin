@@ -31,9 +31,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
 		}
 
 		const statusCode = getStatusCode(exception);
+
+		console.log(statusCode);
+
 		if (statusCode >= 500) {
 			this.logger.error(exception);
 		}
+
 		response.status(statusCode).json(
 			CoreApiResponse.error({
 				name: exception?.response?.status,

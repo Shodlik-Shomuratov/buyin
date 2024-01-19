@@ -13,12 +13,7 @@ import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { CoreApiResponse } from 'src/common/http/response/api.response';
 import { LoginAdminDto } from './dto/login.dto';
-import {
-	ApiBearerAuth,
-	ApiHeader,
-	ApiOperation,
-	ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RefreshAdminDto } from './dto/refresh-admin.dto';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { Roles } from 'src/common/decorator/role.decorator';
@@ -34,7 +29,6 @@ export class AdminController {
 		summary: 'Create admin',
 	})
 	@ApiBearerAuth('JWT')
-	@ApiHeader({ name: 'Authorization', required: false })
 	@Roles(Role.ADMIN)
 	@UseGuards(AuthGuard)
 	async create(@Body() dto: CreateAdminDto) {
@@ -54,7 +48,6 @@ export class AdminController {
 		summary: 'Admin refresh token',
 	})
 	@ApiBearerAuth('JWT')
-	@ApiHeader({ name: 'Authorization', required: false })
 	@Roles(Role.ADMIN)
 	@UseGuards(AuthGuard)
 	async refresh(@Body() dto: RefreshAdminDto) {
@@ -66,7 +59,6 @@ export class AdminController {
 		summary: 'Get all admin',
 	})
 	@ApiBearerAuth('JWT')
-	@ApiHeader({ name: 'Authorization', required: false })
 	@Roles(Role.ADMIN)
 	@UseGuards(AuthGuard)
 	async findAll() {
@@ -78,7 +70,6 @@ export class AdminController {
 		summary: 'Find an admin',
 	})
 	@ApiBearerAuth('JWT')
-	@ApiHeader({ name: 'Authorization', required: false })
 	@Roles(Role.ADMIN)
 	@UseGuards(AuthGuard)
 	async findOne(@Param('id') id: string) {
@@ -90,7 +81,6 @@ export class AdminController {
 		summary: 'Update an admin',
 	})
 	@ApiBearerAuth('JWT')
-	@ApiHeader({ name: 'Authorization', required: false })
 	@Roles(Role.ADMIN)
 	@UseGuards(AuthGuard)
 	async update(@Param('id') id: string, @Body() dto: UpdateAdminDto) {
@@ -102,7 +92,6 @@ export class AdminController {
 		summary: 'Delete an admin',
 	})
 	@ApiBearerAuth('JWT')
-	@ApiHeader({ name: 'Authorization', required: false })
 	@Roles(Role.ADMIN)
 	@UseGuards(AuthGuard)
 	async remove(@Param('id') id: string) {
